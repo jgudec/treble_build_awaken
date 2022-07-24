@@ -1,0 +1,57 @@
+From 98cfc4a76da5890bf19aee93edae6990dbd3dac1 Mon Sep 17 00:00:00 2001
+From: jgudec <jakov.gudec@gmail.com>
+Date: Sat, 23 Jul 2022 20:13:28 +0100
+Subject: [PATCH 2/5] Revert "udfps: Allow to configure hbm overlay type"
+
+This reverts commit 0789261e0f03fadc3b304223d7e37edfbd09acb6.
+---
+ packages/SystemUI/res/values/awaken_config.xml             | 6 ------
+ .../src/com/android/systemui/biometrics/UdfpsView.java     | 7 +++----
+ 2 files changed, 3 insertions(+), 10 deletions(-)
+
+diff --git a/packages/SystemUI/res/values/awaken_config.xml b/packages/SystemUI/res/values/awaken_config.xml
+index 6471eb22b6c7..bb0a6c622b6f 100644
+--- a/packages/SystemUI/res/values/awaken_config.xml
++++ b/packages/SystemUI/res/values/awaken_config.xml
+@@ -28,12 +28,6 @@
+     <!-- Color of the UDFPS pressed view -->
+     <color name="config_udfpsColor">#ffffffff</color>
+ 
+-    <!-- HBM type of UDFPS overlay.
+-            0 - GLOBAL HBM
+-            1 - LOCAL HBM
+-    -->
+-    <integer name="config_udfpsHbmType">1</integer>
+-
+     <!-- Udfps HBM provider class name -->
+     <string name="config_udfpsHbmProviderComponent">com.android.systemui.biometrics.DummyUdfpsHbmProvider</string>
+ 
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsView.java b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsView.java
+index e4cbb527d338..30e5aed2f8d8 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsView.java
+@@ -51,6 +51,7 @@ public class UdfpsView extends FrameLayout implements DozeReceiver, UdfpsIllumin
+ 
+     private static final String SETTING_HBM_TYPE =
+             "com.android.systemui.biometrics.UdfpsSurfaceView.hbmType";
++    private static final @HbmType int DEFAULT_HBM_TYPE = UdfpsHbmTypes.LOCAL_HBM;
+ 
+     private static final int DEBUG_TEXT_SIZE_PX = 32;
+ 
+@@ -98,11 +99,9 @@ public class UdfpsView extends FrameLayout implements DozeReceiver, UdfpsIllumin
+ 
+         if (Build.IS_ENG || Build.IS_USERDEBUG) {
+             mHbmType = Settings.Secure.getIntForUser(mContext.getContentResolver(),
+-                    SETTING_HBM_TYPE,
+-                    mContext.getResources().getInteger(R.integer.config_udfpsHbmType),
+-                    UserHandle.USER_CURRENT);
++                    SETTING_HBM_TYPE, DEFAULT_HBM_TYPE, UserHandle.USER_CURRENT);
+         } else {
+-            mHbmType = mContext.getResources().getInteger(R.integer.config_udfpsHbmType);
++            mHbmType = DEFAULT_HBM_TYPE;
+         }
+     }
+ 
+-- 
+2.17.1
+

@@ -1,0 +1,20 @@
+From 20fb32eb085f60b72d13efd17d687401ec1ff5ec Mon Sep 17 00:00:00 2001
+From: jgudec <jakov.gudec@gmail.com>
+Date: Sun, 17 Jul 2022 21:10:26 +0100
+Subject: [PATCH] Fix Gradle JVM Path
+
+---
+ gradle.properties | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/gradle.properties b/gradle.properties
+index 5bac8ac..2292fa0 100644
+--- a/gradle.properties
++++ b/gradle.properties
+@@ -1 +1,3 @@
+ android.useAndroidX=true
++
++org.gradle.java.home=/usr/lib/jvm/java-11-openjdk-amd64
+-- 
+2.17.1
+

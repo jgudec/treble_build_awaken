@@ -1,0 +1,77 @@
+From 9855bf7e96dac1fb99742cd3b05e8e6be8f65998 Mon Sep 17 00:00:00 2001
+From: jgudec <jakov.gudec@gmail.com>
+Date: Sun, 17 Jul 2022 21:02:27 +0100
+Subject: [PATCH] Address Pocket Judge
+
+---
+ private/file.te          | 3 +++
+ private/file_contexts    | 3 +++
+ private/service.te       | 1 +
+ private/service_contexts | 1 +
+ private/system_server.te | 5 +++++
+ 5 files changed, 13 insertions(+)
+
+diff --git a/private/file.te b/private/file.te
+index a024600fb..fc58b3779 100644
+--- a/private/file.te
++++ b/private/file.te
+@@ -62,3 +62,6 @@ type environ_system_data_file, file_type, data_file_type, core_data_file_type;
+ 
+ # /dev/kvm
+ type kvm_device, dev_type;
++
++# Pocket Judge
++type pocket_judge_sysfs, fs_type, sysfs_type;
+\ No newline at end of file
+diff --git a/private/file_contexts b/private/file_contexts
+index 0330d888d..f6bd20efd 100644
+--- a/private/file_contexts
++++ b/private/file_contexts
+@@ -811,3 +811,6 @@
+ /(system|product)/bin/check_dynamic_partitions  u:object_r:postinstall_exec:s0
+ /(system|product)/bin/otapreopt_script          u:object_r:postinstall_exec:s0
+ /(system|product)/bin/otapreopt                 u:object_r:postinstall_dexopt_exec:s0
++
++# Pocket Judge
++/sys/kernel/pocket_judge(/.*)?	                u:object_r:pocket_judge_sysfs:s0
+\ No newline at end of file
+diff --git a/private/service.te b/private/service.te
+index 79722ac81..fbec994b7 100644
+--- a/private/service.te
++++ b/private/service.te
+@@ -10,4 +10,5 @@ type statscompanion_service,        system_server_service, service_manager_type;
+ type statsmanager_service,          system_api_service, system_server_service, service_manager_type;
+ type tracingproxy_service,          system_server_service, service_manager_type;
+ type uce_service,                   service_manager_type;
++type pocket_service, system_api_service, system_server_service, service_manager_type;
+ type app_lock_service, system_api_service, system_server_service, service_manager_type;
+\ No newline at end of file
+diff --git a/private/service_contexts b/private/service_contexts
+index 2cabd59a4..c579d128a 100644
+--- a/private/service_contexts
++++ b/private/service_contexts
+@@ -308,4 +308,5 @@ wifiaware                                 u:object_r:wifiaware_service:s0
+ wifirtt                                   u:object_r:rttmanager_service:s0
+ window                                    u:object_r:window_service:s0
+ *                                         u:object_r:default_android_service:s0
++pocket                                    u:object_r:pocket_service:s0
+ app_lock                                  u:object_r:app_lock_service:s0
+\ No newline at end of file
+diff --git a/private/system_server.te b/private/system_server.te
+index 163cf3684..ce0bb70f4 100644
+--- a/private/system_server.te
++++ b/private/system_server.te
+@@ -1412,5 +1412,10 @@ neverallowxperm { domain -system_server } binder_device:chr_file ioctl { BINDER_
+ neverallow { domain -init -system_server } font_data_file:file no_w_file_perms;
+ neverallow { domain -init -system_server } font_data_file:dir no_w_dir_perms;
+ 
++# Pocket Judge
++allow system_server pocket_judge_sysfs:dir search;
++allow system_server pocket_judge_sysfs:file rw_file_perms;
++allow system_server pocket_service:service_manager { add find };
++
+ # App Lock
+ add_service(system_server, app_lock_service); 
+-- 
+2.17.1
+

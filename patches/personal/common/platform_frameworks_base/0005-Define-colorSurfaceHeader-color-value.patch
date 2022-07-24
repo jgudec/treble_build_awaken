@@ -1,0 +1,23 @@
+From d9f5d3203d4014549a84b252e049733c72b402cf Mon Sep 17 00:00:00 2001
+From: jgudec <jakov.gudec@gmail.com>
+Date: Sun, 24 Jul 2022 13:57:51 +0100
+Subject: [PATCH] Define colorSurfaceHeader color value
+
+---
+ packages/SystemUI/res/values-night/awaken_styles.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/res/values-night/awaken_styles.xml b/packages/SystemUI/res/values-night/awaken_styles.xml
+index 8b5306086ac7..aa2646f48fb4 100644
+--- a/packages/SystemUI/res/values-night/awaken_styles.xml
++++ b/packages/SystemUI/res/values-night/awaken_styles.xml
+@@ -1,5 +1,5 @@
+ <resources>
+     <style name="Theme.DeviceDefault.SystemUI" parent="@*android:Theme.DeviceDefault.SystemUI">
+-        <item name="colorSurfaceHeader">@color/surface_header_dark_sysui</item>
++        <item name="colorSurfaceHeader">@*android:color/system_neutral1_500</item>
+     </style>
+ </resources>
+-- 
+2.17.1
+

@@ -1,0 +1,26 @@
+From 067ec8b4fc2ab33b9a6849870385c3e40f8ba3dc Mon Sep 17 00:00:00 2001
+From: Andy CrossGate Yan <GeForce8800Ultra@gmail.com>
+Date: Sun, 17 Jul 2022 22:55:59 +0100
+Subject: [PATCH] build: Don't handle apns-conf p2
+
+---
+ target/product/aosp_product.mk | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/target/product/aosp_product.mk b/target/product/aosp_product.mk
+index aeb042b10..e1931af39 100644
+--- a/target/product/aosp_product.mk
++++ b/target/product/aosp_product.mk
+@@ -38,9 +38,3 @@ PRODUCT_PACKAGES += \
+     preinstalled-packages-platform-aosp-product.xml \
+     WallpaperPicker \
+ 
+-# Telephony:
+-#   Provide a APN configuration to GSI product
+-ifeq ($(AWAKEN_BUILD),)
+-PRODUCT_COPY_FILES += \
+-    device/sample/etc/apns-full-conf.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/apns-conf.xml
+-endif
+-- 
+2.17.1
+

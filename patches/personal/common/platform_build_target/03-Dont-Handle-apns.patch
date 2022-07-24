@@ -1,0 +1,27 @@
+From 283e16d81e5c4c847a4ee031c8cfec7338b8ad94 Mon Sep 17 00:00:00 2001
+From: ChonDoit <thphantomblog@gmail.com>
+Date: Sun, 17 Jul 2022 18:55:02 +0100
+Subject: [PATCH] Dont Handle apns
+
+---
+ target/product/full_base_telephony.mk | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/product/full_base_telephony.mk b/product/full_base_telephony.mk
+index 33a429674..5470ad2be 100644
+--- a/target/product/full_base_telephony.mk
++++ b/target/product/full_base_telephony.mk
+@@ -26,10 +26,5 @@ PRODUCT_VENDOR_PROPERTIES := \
+ PRODUCT_COPY_FILES := \
+     frameworks/native/data/etc/handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml
+ 
+-ifeq ($(AWAKEN_BUILD),)
+-PRODUCT_COPY_FILES += \
+-    device/sample/etc/apns-full-conf.xml:system/etc/apns-conf.xml
+-endif
+-
+ $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base.mk)
+ $(call inherit-product, $(SRC_TARGET_DIR)/product/telephony.mk)
+-- 
+2.17.1
+

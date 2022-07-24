@@ -1,0 +1,104 @@
+From d3b93e240716552617d482bf178c274857b76876 Mon Sep 17 00:00:00 2001
+From: jgudec <jakov.gudec@gmail.com>
+Date: Sun, 24 Jul 2022 12:38:38 +0100
+Subject: [PATCH 1/2] Revert "SystemUI: Add dual-tone light and dark themes for
+ QS"
+
+This reverts commit 9d24bc119d7a85a6666b485c16f1b44c280fb0e8.
+---
+ .../res/color/surface_header_dark_sysui.xml    | 18 ------------------
+ packages/SystemUI/res/values/styles.xml        |  2 +-
+ .../statusbar/phone/ScrimController.java       | 13 +------------
+ 3 files changed, 2 insertions(+), 31 deletions(-)
+ delete mode 100644 packages/SystemUI/res/color/surface_header_dark_sysui.xml
+
+diff --git a/packages/SystemUI/res/color/surface_header_dark_sysui.xml b/packages/SystemUI/res/color/surface_header_dark_sysui.xml
+deleted file mode 100644
+index 5ba835b79213..000000000000
+--- a/packages/SystemUI/res/color/surface_header_dark_sysui.xml
++++ /dev/null
+@@ -1,18 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<!-- Copyright (C) 2021 The Android Open Source Project
+-
+-     Licensed under the Apache License, Version 2.0 (the "License");
+-     you may not use this file except in compliance with the License.
+-     You may obtain a copy of the License at
+-
+-          http://www.apache.org/licenses/LICENSE-2.0
+-
+-     Unless required by applicable law or agreed to in writing, software
+-     distributed under the License is distributed on an "AS IS" BASIS,
+-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-     See the License for the specific language governing permissions and
+-     limitations under the License.
+--->
+-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+-    <item android:color="@*android:color/system_neutral1_500" android:lStar="5" />
+-</selector>
+diff --git a/packages/SystemUI/res/values/styles.xml b/packages/SystemUI/res/values/styles.xml
+index 5894c491f117..fae5b16075fb 100644
+--- a/packages/SystemUI/res/values/styles.xml
++++ b/packages/SystemUI/res/values/styles.xml
+@@ -331,7 +331,7 @@
+         <item name="android:windowIsFloating">true</item>
+         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
+         <item name="offStateColor">@*android:color/surface_light</item>
+-        <item name="underSurfaceColor">@android:color/system_neutral1_100</item>
++        <item name="underSurfaceColor">@android:color/system_neutral1_50</item>
+         <item name="android:colorBackground">@android:color/system_neutral1_50</item>
+         <item name="android:itemTextAppearance">@style/Control.MenuItem</item>
+     </style>
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/ScrimController.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/ScrimController.java
+index 47bc89f0e1a9..fd44a9b5a5b3 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/ScrimController.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/ScrimController.java
+@@ -180,7 +180,6 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
+     private UnlockedScreenOffAnimationController mUnlockedScreenOffAnimationController;
+ 
+     private GradientColors mColors;
+-    private GradientColors mBehindColors;
+     private boolean mNeedsDrawableColorUpdate;
+ 
+     private float mScrimBehindAlphaKeyguard = KEYGUARD_SCRIM_ALPHA;
+@@ -277,7 +276,6 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
+         );
+ 
+         mColors = new GradientColors();
+-        mBehindColors = new GradientColors();
+     }
+ 
+     /**
+@@ -876,7 +874,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
+                     && !mBlankScreen;
+ 
+             mScrimInFront.setColors(mColors, animateScrimInFront);
+-            mScrimBehind.setColors(mBehindColors, animateBehindScrim);
++            mScrimBehind.setColors(mColors, animateBehindScrim);
+             mNotificationsScrim.setColors(mColors, animateScrimNotifications);
+ 
+             dispatchBackScrimState(mScrimBehind.getViewAlpha());
+@@ -1216,20 +1214,11 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
+         if (mScrimBehind == null) return;
+         int background = Utils.getColorAttr(mScrimBehind.getContext(),
+                 android.R.attr.colorBackgroundFloating).getDefaultColor();
+-        int surfaceBackground = Utils.getColorAttr(mScrimBehind.getContext(),
+-                R.attr.colorSurfaceHeader).getDefaultColor();
+         int accent = Utils.getColorAccent(mScrimBehind.getContext()).getDefaultColor();
+-
+         mColors.setMainColor(background);
+         mColors.setSecondaryColor(accent);
+         mColors.setSupportsDarkText(
+                 ColorUtils.calculateContrast(mColors.getMainColor(), Color.WHITE) > 4.5);
+-
+-        mBehindColors.setMainColor(surfaceBackground);
+-        mBehindColors.setSecondaryColor(accent);
+-        mBehindColors.setSupportsDarkText(
+-                ColorUtils.calculateContrast(mBehindColors.getMainColor(), Color.WHITE) > 4.5);
+-
+         mNeedsDrawableColorUpdate = true;
+     }
+ 
+-- 
+2.17.1
+

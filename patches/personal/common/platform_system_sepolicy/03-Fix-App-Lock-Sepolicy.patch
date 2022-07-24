@@ -1,0 +1,45 @@
+From 12473fa18bb90b731efd10e2fa5316b7fd7983db Mon Sep 17 00:00:00 2001
+From: jgudec <jakov.gudec@gmail.com>
+Date: Sun, 17 Jul 2022 20:57:19 +0100
+Subject: [PATCH] Address App Lock Sepolicy
+
+---
+ private/service.te       | 1 +
+ private/service_contexts | 1 +
+ private/system_server.te | 3 +++
+ 3 files changed, 5 insertions(+)
+
+diff --git a/private/service.te b/private/service.te
+index 7f692f35c..79722ac81 100644
+--- a/private/service.te
++++ b/private/service.te
+@@ -10,3 +10,4 @@ type statscompanion_service,        system_server_service, service_manager_type;
+ type statsmanager_service,          system_api_service, system_server_service, service_manager_type;
+ type tracingproxy_service,          system_server_service, service_manager_type;
+ type uce_service,                   service_manager_type;
++type app_lock_service, system_api_service, system_server_service, service_manager_type;
+\ No newline at end of file
+diff --git a/private/service_contexts b/private/service_contexts
+index 3fd342b9b..2cabd59a4 100644
+--- a/private/service_contexts
++++ b/private/service_contexts
+@@ -308,3 +308,4 @@ wifiaware                                 u:object_r:wifiaware_service:s0
+ wifirtt                                   u:object_r:rttmanager_service:s0
+ window                                    u:object_r:window_service:s0
+ *                                         u:object_r:default_android_service:s0
++app_lock                                  u:object_r:app_lock_service:s0
+\ No newline at end of file
+diff --git a/private/system_server.te b/private/system_server.te
+index 6aca00038..163cf3684 100644
+--- a/private/system_server.te
++++ b/private/system_server.te
+@@ -1411,3 +1411,6 @@ neverallowxperm { domain -system_server } binder_device:chr_file ioctl { BINDER_
+ # Only system server can write the font files.
+ neverallow { domain -init -system_server } font_data_file:file no_w_file_perms;
+ neverallow { domain -init -system_server } font_data_file:dir no_w_dir_perms;
++
++# App Lock
++add_service(system_server, app_lock_service); 
+-- 
+2.17.1
+
